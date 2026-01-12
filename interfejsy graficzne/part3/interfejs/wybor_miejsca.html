@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <title>Wybór miejsca</title>
+    <style>
+        /* podświetlenie wybranego sektora/miejsca */
+        .sektor.active, .lista-miejsc button.active {
+            background-color: #1e90ff;
+            color: white;
+            border-color: #1e90ff;
+        }
+        .sektor {
+            border: 2px solid #1e90ff;
+            padding: 20px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .lista-miejsc button {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .lista-miejsc button[disabled] {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body class="main-page">
+
+    <header>
+        <h1>Wybierz miejsce</h1>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a id="powrotLink">Powrót</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section>
+            <h2>Wybierz sektor</h2>
+
+            <div style="
+        display:grid; 
+        grid-template-columns: repeat(3, 1fr); 
+        gap:15px; 
+        max-width:500px;
+        margin:auto;
+        text-align:center;">
+
+                <!-- sektor -->
+                <div id="sektor-A" class="sektor" onclick="pokazMiejsca('A')">
+                    <h3>Sektor A</h3>
+                    <p>Najbliżej sceny</p>
+                </div>
+
+                <div id="sektor-B" class="sektor" onclick="pokazMiejsca('B')">
+                    <h3>Sektor B</h3>
+                    <p>Miejsca centralne</p>
+                </div>
+
+                <div id="sektor-C" class="sektor" onclick="pokazMiejsca('C')">
+                    <h3>Sektor C</h3>
+                    <p>Najtańsze miejsca</p>
+                </div>
+
+            </div>
+
+            <hr style="margin:30px 0;">
+
+            <!-- miejsca A -->
+            <div id="miejsca-A" class="lista-miejsc" style="display:none;">
+                <h2>Miejsca – Sektor A</h2>
+                <div style="display:flex; gap:10px;">
+                    <button>A1</button>
+                    <button>A2</button>
+                    <button disabled>A3 (zajęte)</button>
+                </div>
+            </div>
+
+            <!-- miejsca B -->
+            <div id="miejsca-B" class="lista-miejsc" style="display:none;">
+                <h2>Miejsca – Sektor B</h2>
+                <div style="display:flex; gap:10px;">
+                    <button>B5</button>
+                    <button>B6</button>
+                    <button>B7</button>
+                </div>
+            </div>
+
+            <!-- miejsca C -->
+            <div id="miejsca-C" class="lista-miejsc" style="display:none;">
+                <h2>Miejsca – Sektor C</h2>
+                <div style="display:flex; gap:10px;">
+                    <button>C1</button>
+                    <button>C2</button>
+                    <button disabled>C3 (zajęte)</button>
+                </div>
+            </div>
+
+            <br><br>
+
+            <a href="platnosc.html"
+                style="padding:12px 18px; background:#1e90ff; color:white; border-radius:8px; text-decoration:none;">
+                Przejdź do płatności
+            </a>
+        </section>
+
+        <script>
+            // wybór sektora i wyświetlenie miejsc
+            function pokazMiejsca(sektor) {
+                // ukryj wszystkie listy miejsc
+                document.querySelectorAll('.lista-miejsc').forEach(div => {
+                    div.style.display = 'none';
+                });
+
+                // usuń podświetlenie z wszystkich sektorów
+                document.querySelectorAll('.sektor').forEach(div => {
+                    div.classList.remove('active');
+                });
+
+                // podświetl wybrany sektor
+                const sektorDiv = document.getElementById('sektor-' + sektor);
+                if (sektorDiv) sektorDiv.classList.add('active');
+
+                // pokaż miejsca dla sektora
+                document.getElementById('miejsca-' + sektor).style.display = 'block';
+
+                // scroll do miejsc
+                document.getElementById('miejsca-' + sektor).scrollIntoView({ behavior: 'smooth' });
+            }
+
+            // podświetlanie wybranego miejsca
+            document.querySelectorAll('.lista-miejsc button').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // ignoruj przyciski zajęte
+                    if (btn.disabled) return;
+
+                    // usuń active ze wszystkich przycisków w tym sektorze
+                    btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+
+                    // dodaj active do klikniętego
+                    btn.classList.add('active');
+                });
+            });
+
+            // link powrotu
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get("id");
+
+            const back = document.getElementById("powrotLink");
+            if (id) {
+                back.href = "koncert.html?id=" + id;
+            } else {
+                back.href = "koncert.html"; // fallback
+            }
+        </script>
+
+    </main>
+
+</body>
+
+</html>
